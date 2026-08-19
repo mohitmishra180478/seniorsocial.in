@@ -32,9 +32,12 @@ if (joinForm) {
       `Email: ${formData.get('Email') || ''}`,
       `Interests: ${formData.get('Interests') || ''}`,
       `Looking for: ${formData.get('Looking for') || ''}`,
+      `Preferred verification method: ${formData.get('Preferred verification method') || ''}`,
+      `Correct information declaration: ${formData.get('Correct information declaration') ? 'Yes' : 'No'}`,
       `Consent: ${formData.get('Consent') ? 'Yes' : 'No'}`,
       '',
-      'Please contact this person after review/verification.'
+      'Please review and verify this person before connecting them with any group, activity or other member.',
+      'Note: Aadhaar number has not been collected through the website.'
     ].join('\n');
 
     const subject = encodeURIComponent('Senior Social India - New Join Request');
