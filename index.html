@@ -17,13 +17,8 @@
   <header class="site-header">
     <nav class="nav container">
       <a href="#home" class="logo" aria-label="Senior Social India home">
-        <span class="logo-mark">
-          <img src="assets/senior-social-mark.svg" alt="" />
-        </span>
-        <span class="logo-text">
-          <strong>Senior Social India</strong>
-          <small>Connect • Engage • Belong</small>
-        </span>
+        <span class="logo-mark"><img src="assets/senior-social-mark.svg" alt="" /></span>
+        <span class="logo-text"><strong>Senior Social India</strong><small>Connect • Engage • Belong</small></span>
       </a>
       <button class="menu-toggle" aria-label="Open menu">☰</button>
       <div class="nav-links">
@@ -31,6 +26,7 @@
         <a href="#activities">Activities</a>
         <a href="#safety">Safety</a>
         <a href="#verification">Verification</a>
+        <a href="#availability">Global Access</a>
         <a href="#join">Join</a>
         <a href="admin.html">Admin</a>
         <a href="#contact" class="btn btn-small">Contact</a>
@@ -42,12 +38,12 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">For seniors and families across India</p>
+          <p class="eyebrow">For seniors and Indian families across India and abroad</p>
           <h1>Helping India’s seniors connect, engage and belong.</h1>
           <p class="hero-text">Senior Social India is a friendly platform for senior citizens to make meaningful connections, join local activities, share interests and feel supported in a safe community.</p>
           <div class="hero-actions">
             <a href="#join" class="btn">Join the Community</a>
-            <a href="#activities" class="btn btn-outline">Explore Activities</a>
+            <a href="#availability" class="btn btn-outline">Global App Plan</a>
           </div>
           <div class="install-card">
             <strong>Mobile app ready:</strong>
@@ -65,10 +61,7 @@
 
     <section id="about" class="section">
       <div class="container split">
-        <div>
-          <p class="section-label">About Senior Social</p>
-          <h2>A community-first platform for elderly companionship.</h2>
-        </div>
+        <div><p class="section-label">About Senior Social</p><h2>A community-first platform for elderly companionship.</h2></div>
         <p>Senior Social India is created with one purpose: to reduce loneliness and make social connection easier for older adults. Whether someone wants to attend group activities, meet like-minded people, learn something new or simply have a trusted community to be part of, Senior Social provides a welcoming starting point.</p>
       </div>
     </section>
@@ -88,20 +81,8 @@
 
     <section id="safety" class="section">
       <div class="container split reverse">
-        <div class="trust-box">
-          <h3>Trusted & Safe</h3>
-          <ul>
-            <li>Family-assisted onboarding</li>
-            <li>Verified community groups</li>
-            <li>Clear contact support</li>
-            <li>Simple senior-friendly design</li>
-          </ul>
-        </div>
-        <div>
-          <p class="section-label">Safety & Trust</p>
-          <h2>Designed with care, clarity and confidence.</h2>
-          <p>Senior Social India focuses on a safe, respectful and easy-to-use experience. The platform is designed to be simple for seniors while also giving families confidence that their loved ones can participate in meaningful social activities.</p>
-        </div>
+        <div class="trust-box"><h3>Trusted & Safe</h3><ul><li>Family-assisted onboarding</li><li>Verified community groups</li><li>Clear contact support</li><li>Simple senior-friendly design</li></ul></div>
+        <div><p class="section-label">Safety & Trust</p><h2>Designed with care, clarity and confidence.</h2><p>Senior Social India focuses on a safe, respectful and easy-to-use experience. The platform is designed to be simple for seniors while also giving families confidence that their loved ones can participate in meaningful social activities.</p></div>
       </div>
     </section>
 
@@ -125,68 +106,37 @@
       </div>
     </section>
 
+    <section id="availability" class="section global-section">
+      <div class="container">
+        <p class="section-label">Global Access Plan</p>
+        <h2>Phase 3 availability for Indian families worldwide.</h2>
+        <p class="global-intro">Senior Social India will be planned for app availability in India, United Kingdom, United States, Canada, Australia, UAE and Singapore. Local activities and groups will begin India-first, while family support access can be global.</p>
+        <div class="country-grid">
+          <span>🇮🇳 India</span><span>🇬🇧 United Kingdom</span><span>🇺🇸 United States</span><span>🇨🇦 Canada</span><span>🇦🇺 Australia</span><span>🇦🇪 UAE</span><span>🇸🇬 Singapore</span>
+        </div>
+        <div class="launch-note"><strong>Launch approach:</strong> App availability in Phase 3 countries, India-first events and groups, and global family access for relatives supporting seniors.</div>
+      </div>
+    </section>
+
     <section id="join" class="section join-section">
       <div class="container join-grid">
         <div class="join-copy">
           <p class="section-label">Join Senior Social</p>
           <h2>Create a verified interest registration.</h2>
           <p>Fill in the details below. Your registration will be saved securely for admin review. Personal details are not displayed publicly on the website.</p>
-          <div class="privacy-note">
-            <strong>Safe first:</strong> Members should be email/phone/family verified and admin-approved before any senior group or individual connection is arranged.
-          </div>
+          <div class="privacy-note"><strong>Safe first:</strong> Members should be email/phone/family verified and admin-approved before any senior group or individual connection is arranged.</div>
         </div>
 
         <form id="joinForm" class="join-form">
-          <div class="form-row">
-            <label for="fullName">Full name *</label>
-            <input id="fullName" name="Full name" type="text" required placeholder="Enter full name" />
-          </div>
-
-          <div class="form-row two-cols">
-            <div><label for="age">Age</label><input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" /></div>
-            <div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div>
-          </div>
-
-          <div class="form-row two-cols">
-            <div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" /></div>
-            <div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div>
-          </div>
-
-          <div class="form-row">
-            <label for="password">Create password *</label>
-            <input id="password" name="Password" type="password" required minlength="6" placeholder="Minimum 6 characters" />
-          </div>
-
-          <div class="form-row">
-            <label for="interests">Interests</label>
-            <textarea id="interests" name="Interests" rows="3" placeholder="Tea groups, walks, music, bhajan, yoga, books, travel, volunteering..."></textarea>
-          </div>
-
-          <div class="form-row">
-            <label for="lookingFor">What are you looking for?</label>
-            <select id="lookingFor" name="Looking for">
-              <option value="Friendship and companionship">Friendship and companionship</option>
-              <option value="Group activities and events">Group activities and events</option>
-              <option value="Hobby or learning groups">Hobby or learning groups</option>
-              <option value="Wellness or walking groups">Wellness or walking groups</option>
-              <option value="Family enquiry for a senior">Family enquiry for a senior</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <label for="verificationMethod">Preferred verification method</label>
-            <select id="verificationMethod" name="Preferred verification method">
-              <option value="Mobile verification">Mobile verification</option>
-              <option value="Email verification">Email verification</option>
-              <option value="Family or emergency contact confirmation">Family or emergency contact confirmation</option>
-              <option value="Aadhaar offline QR verification if voluntarily provided later">Aadhaar offline QR verification if voluntarily provided later</option>
-              <option value="Other government ID if preferred">Other government ID if preferred</option>
-            </select>
-          </div>
-
+          <div class="form-row"><label for="fullName">Full name *</label><input id="fullName" name="Full name" type="text" required placeholder="Enter full name" /></div>
+          <div class="form-row two-cols"><div><label for="age">Age</label><input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" /></div><div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div></div>
+          <div class="form-row two-cols"><div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" /></div><div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div></div>
+          <div class="form-row"><label for="password">Create password *</label><input id="password" name="Password" type="password" required minlength="6" placeholder="Minimum 6 characters" /></div>
+          <div class="form-row"><label for="interests">Interests</label><textarea id="interests" name="Interests" rows="3" placeholder="Tea groups, walks, music, bhajan, yoga, books, travel, volunteering..."></textarea></div>
+          <div class="form-row"><label for="lookingFor">What are you looking for?</label><select id="lookingFor" name="Looking for"><option value="Friendship and companionship">Friendship and companionship</option><option value="Group activities and events">Group activities and events</option><option value="Hobby or learning groups">Hobby or learning groups</option><option value="Wellness or walking groups">Wellness or walking groups</option><option value="Family enquiry for a senior">Family enquiry for a senior</option></select></div>
+          <div class="form-row"><label for="verificationMethod">Preferred verification method</label><select id="verificationMethod" name="Preferred verification method"><option value="Mobile verification">Mobile verification</option><option value="Email verification">Email verification</option><option value="Family or emergency contact confirmation">Family or emergency contact confirmation</option><option value="Aadhaar offline QR verification if voluntarily provided later">Aadhaar offline QR verification if voluntarily provided later</option><option value="Other government ID if preferred">Other government ID if preferred</option></select></div>
           <label class="consent-line"><input id="correctInfo" name="Correct information declaration" type="checkbox" required /> I confirm that the information provided is correct and belongs to me.</label>
           <label class="consent-line"><input id="consent" name="Consent" type="checkbox" required /> I agree to be contacted by Senior Social India regarding this enquiry and understand that my details will not be published publicly.</label>
-
           <button type="submit" class="btn form-submit">Register Interest</button>
           <p id="formMessage" class="form-help">After submission, we will send an email verification link where possible and save the profile for admin review.</p>
         </form>
