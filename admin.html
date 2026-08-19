@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Senior Social India Admin</title>
+  <link rel="icon" href="assets/senior-social-mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo" aria-label="Senior Social India home">
+        <span class="logo-mark"><img src="assets/senior-social-mark.svg" alt="" /></span>
+        <span class="logo-text"><strong>Senior Social India</strong><small>Admin Dashboard</small></span>
+      </a>
+      <div class="nav-links admin-nav"><a href="index.html">Website</a><button id="logoutBtn" class="btn btn-small hidden">Logout</button></div>
+    </nav>
+  </header>
+
+  <main class="section admin-section">
+    <div class="container">
+      <div class="admin-header">
+        <div>
+          <p class="section-label">Admin</p>
+          <h1>Member Dashboard</h1>
+          <p>View registered users, verification status and approval status.</p>
+        </div>
+      </div>
+
+      <div id="configWarning" class="warning-box hidden">
+        Firebase is not configured yet. Paste your Firebase web config in <strong>firebase-config.js</strong> first.
+      </div>
+
+      <section id="loginPanel" class="admin-card">
+        <h2>Admin Login</h2>
+        <p>Use the admin email/password created in Firebase Authentication.</p>
+        <form id="adminLoginForm" class="admin-login-form">
+          <label>Email</label>
+          <input id="adminEmail" type="email" required placeholder="admin@example.com" />
+          <label>Password</label>
+          <input id="adminPassword" type="password" required placeholder="Password" />
+          <button class="btn" type="submit">Login</button>
+        </form>
+        <p id="loginMessage" class="form-help"></p>
+      </section>
+
+      <section id="dashboardPanel" class="hidden">
+        <div class="stats-grid">
+          <div class="stat-card"><strong id="totalUsers">0</strong><span>Total users</span></div>
+          <div class="stat-card"><strong id="emailVerifiedUsers">0</strong><span>Email verified</span></div>
+          <div class="stat-card"><strong id="phoneVerifiedUsers">0</strong><span>Phone verified</span></div>
+          <div class="stat-card"><strong id="approvedUsers">0</strong><span>Admin approved</span></div>
+          <div class="stat-card"><strong id="pendingUsers">0</strong><span>Pending review</span></div>
+        </div>
+
+        <div class="admin-tools">
+          <input id="userSearch" type="search" placeholder="Search by name, city, mobile or email" />
+          <button id="exportCsv" class="btn btn-outline" type="button">Export CSV</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Name</th><th>City</th><th>Mobile</th><th>Email</th><th>Email verified</th><th>Phone verified</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
