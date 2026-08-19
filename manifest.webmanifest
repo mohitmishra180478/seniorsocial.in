@@ -1,0 +1,20 @@
+{
+  "name": "Senior Social India",
+  "short_name": "Senior Social",
+  "description": "A safe senior community app for connection, activities and companionship in India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8FBFF",
+  "theme_color": "#1E3A8A",
+  "categories": ["social", "lifestyle", "health"],
+  "icons": [
+    {
+      "src": "assets/senior-social-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
