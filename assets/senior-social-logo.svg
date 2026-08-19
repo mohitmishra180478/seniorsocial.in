@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300" role="img" aria-label="Senior Social India logo">
+  <rect width="980" height="300" fill="none"/>
+  <g transform="translate(0,-65) scale(0.72)">
+    <path d="M40 310 C110 405 315 405 388 310" fill="none" stroke="#F7C948" stroke-width="34" stroke-linecap="round"/>
+    <path d="M125 112c-43 0-78 36-78 82v70c0 32 25 57 57 57h76V203c0-51-22-91-55-91z" fill="#1E3A8A"/>
+    <circle cx="117" cy="80" r="51" fill="#1E3A8A"/>
+    <path d="M83 74c23 9 47 2 62-17" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="101" cy="91" r="12" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+    <circle cx="134" cy="91" r="12" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+    <path d="M113 91h10" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+    <path d="M305 112c43 0 78 36 78 82v70c0 32-25 57-57 57h-76V203c0-51 22-91 55-91z" fill="#2E8B57"/>
+    <circle cx="313" cy="80" r="51" fill="#2E8B57"/>
+    <path d="M281 74c25 12 55 7 72-13" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+    <path d="M354 60c20 1 33 15 34 35" fill="#2E8B57"/>
+    <path d="M171 250c-23-22-60-5-60 27 0 38 60 75 60 75s60-37 60-75c0-32-37-49-60-27z" fill="#F59E0B"/>
+    <path d="M210 28h120c32 0 58 24 58 54s-26 54-58 54h-61l-49 40 14-40h-24c-32 0-58-24-58-54s26-54 58-54z" fill="#F59E0B"/>
+    <circle cx="239" cy="82" r="9" fill="#FFFFFF"/><circle cx="278" cy="82" r="9" fill="#FFFFFF"/><circle cx="317" cy="82" r="9" fill="#FFFFFF"/>
+  </g>
+  <text x="300" y="112" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" fill="#1E3A8A">Senior</text>
+  <text x="300" y="188" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" fill="#2E8B57">Social</text>
+  <text x="570" y="188" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" fill="#F59E0B">India</text>
+  <path d="M755 122c28-23 50-23 71-15-11 27-32 43-71 42 2-9 2-17 0-27z" fill="#2E8B57" transform="scale(.55) translate(720,65)"/>
+  <line x1="304" y1="230" x2="385" y2="230" stroke="#1E3A8A" stroke-width="5" stroke-linecap="round"/>
+  <text x="405" y="240" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#1E3A8A">Connect</text>
+  <circle cx="550" cy="230" r="7" fill="#F59E0B"/>
+  <text x="570" y="240" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#1E3A8A">Engage</text>
+  <circle cx="705" cy="230" r="7" fill="#F59E0B"/>
+  <text x="725" y="240" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#1E3A8A">Belong</text>
+  <line x1="850" y1="230" x2="930" y2="230" stroke="#1E3A8A" stroke-width="5" stroke-linecap="round"/>
+</svg>
