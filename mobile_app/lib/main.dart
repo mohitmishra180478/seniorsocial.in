@@ -18,7 +18,7 @@ class SeniorSocialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Senior Social India',
+      title: 'Senior Social',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E3A8A)),
@@ -64,28 +64,22 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Senior Social India',
-                style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Color(0xFF14275F)),
-              ),
+              const Text('Senior Social', style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Color(0xFF14275F))),
               const SizedBox(height: 8),
-              const Text(
-                'Connect • Engage • Belong',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF2E8B57)),
-              ),
+              const Text('Connect • Engage • Belong', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF2E8B57))),
               const SizedBox(height: 24),
               const Text(
                 'Helping India’s seniors connect, join activities, share interests and feel supported in a safe community.',
                 style: TextStyle(fontSize: 17, height: 1.45, color: Color(0xFF374151)),
               ),
               const SizedBox(height: 28),
-              _InfoCard(
+              const _InfoCard(
                 title: 'Global Access',
                 body: 'Access for Indian families in India, United Kingdom, United States, Canada, Australia, UAE and Singapore. Events begin India-first.',
                 icon: Icons.public_rounded,
               ),
               const SizedBox(height: 14),
-              _InfoCard(
+              const _InfoCard(
                 title: 'Safe first',
                 body: 'Members are registered, verified and reviewed before being connected with activities or groups.',
                 icon: Icons.verified_user_rounded,
@@ -107,12 +101,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              Center(
-                child: TextButton(
-                  onPressed: () => _openUrl('https://seniorsocial.in/privacy.html'),
-                  child: const Text('Privacy Policy'),
-                ),
-              ),
+              Center(child: TextButton(onPressed: () => _openUrl('https://seniorsocial.in/privacy.html'), child: const Text('Privacy Policy'))),
             ],
           ),
         ),
@@ -193,7 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _message = 'Registration saved. Please check email verification. Profile is pending admin review.');
     } on FirebaseAuthException catch (e) {
       setState(() => _message = e.message ?? 'Unable to register.');
-    } catch (e) {
+    } catch (_) {
       setState(() => _message = 'Unable to register. Please try again.');
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -221,10 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _busy ? null : _register,
-                    child: Text(_busy ? 'Saving...' : 'Register Interest'),
-                  ),
+                  child: FilledButton(onPressed: _busy ? null : _register, child: Text(_busy ? 'Saving...' : 'Register Interest')),
                 ),
                 const SizedBox(height: 14),
                 Text(_message, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -258,10 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _email.text.trim().toLowerCase(),
-        password: _password.text.trim(),
-      );
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email.text.trim().toLowerCase(), password: _password.text.trim());
       if (!mounted) return;
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const PendingApprovalScreen()));
     } on FirebaseAuthException catch (e) {
@@ -306,7 +289,7 @@ class PendingApprovalScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text('Welcome ${user?.displayName ?? ''}', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
             const SizedBox(height: 12),
-            const Text('Your profile is pending admin review. Senior Social India will verify and approve profiles before connecting members with groups or activities.', style: TextStyle(fontSize: 16, height: 1.45)),
+            const Text('Your profile is pending admin review. Senior Social will verify and approve profiles before connecting members with groups or activities.', style: TextStyle(fontSize: 16, height: 1.45)),
             const SizedBox(height: 22),
             FilledButton(onPressed: () => _openUrl('mailto:info@seniorsocial.in'), child: const Text('Contact Support')),
           ],
@@ -353,14 +336,7 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-Widget _field(
-  TextEditingController controller,
-  String label, {
-  bool required = false,
-  bool obscureText = false,
-  int maxLines = 1,
-  TextInputType? keyboardType,
-}) {
+Widget _field(TextEditingController controller, String label, {bool required = false, bool obscureText = false, int maxLines = 1, TextInputType? keyboardType}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 14),
     child: TextFormField(
