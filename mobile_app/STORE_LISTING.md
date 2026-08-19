@@ -1,13 +1,13 @@
-# Senior Social India - Store Listing Draft
+# Senior Social - Store Listing Draft
 
 ## App name
-Senior Social India
+Senior Social
 
 ## Short description
 A safe community app helping seniors connect, engage and belong.
 
 ## Full description
-Senior Social India helps senior citizens and Indian families stay connected through trusted social registration, family-assisted support, activities and community access.
+Senior Social helps senior citizens and Indian families stay connected through trusted social registration, family-assisted support, activities and community access.
 
 The app is designed for seniors who want companionship, group activities, learning, wellness and meaningful social interaction in a simple and respectful way. Families can also help seniors register and stay connected.
 
@@ -35,7 +35,7 @@ The app is designed for seniors who want companionship, group activities, learni
 Social / Lifestyle
 
 ## Content notes
-Senior Social India does not publicly display personal member details. Member registration is reviewed before any group, activity or member connection is arranged.
+Senior Social does not publicly display personal member details. Member registration is reviewed before any group, activity or member connection is arranged.
 
 ## Support email
 info@seniorsocial.in
