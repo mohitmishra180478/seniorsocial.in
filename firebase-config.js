@@ -1,19 +1,20 @@
 // Senior Social India Firebase configuration
-// Replace the placeholder values below with your Firebase Web App config.
-// Firebase Console > Project settings > Your apps > Web app > SDK setup and configuration.
+// Firebase project: senior-social-india
 
 export const firebaseConfig = {
-  apiKey: "PASTE_FIREBASE_API_KEY_HERE",
-  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "PASTE_MESSAGING_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyAgqX6uCufW1kENxj13kuHD2L6SO7vEvQo",
+  authDomain: "senior-social-india.firebaseapp.com",
+  projectId: "senior-social-india",
+  storageBucket: "senior-social-india.firebasestorage.app",
+  messagingSenderId: "21502516857",
+  appId: "1:21502516857:web:96d2e2cf13c63594cc3ea8",
+  measurementId: "G-4WHDCFZX46"
 };
 
-export const isFirebaseConfigured = !firebaseConfig.apiKey.includes("PASTE_") && !firebaseConfig.projectId.includes("PASTE_");
+export const isFirebaseConfigured = true;
 
 // Add the Firebase Auth UID of your admin account here after you create your admin login.
+// You can find it in Firebase Console > Authentication > Users after you register/login once.
 export const adminUIDs = [
   "PASTE_ADMIN_FIREBASE_UID_HERE"
 ];
