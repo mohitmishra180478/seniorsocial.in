@@ -25,6 +25,7 @@
         <a href="#about">About</a>
         <a href="#activities">Activities</a>
         <a href="#safety">Safety</a>
+        <a href="#verification">Verification</a>
         <a href="#join">Join</a>
         <a href="#contact" class="btn btn-small">Contact</a>
       </div>
@@ -109,6 +110,26 @@
       </div>
     </section>
 
+    <section id="verification" class="section verification-section">
+      <div class="container verification-grid">
+        <div>
+          <p class="section-label">Member Verification</p>
+          <h2>We review members before connecting them.</h2>
+          <p>To keep Senior Social India safe, we treat every joining request as an interest registration first. Personal details are reviewed before any member is connected with groups, activities or other people.</p>
+          <p class="aadhaar-note"><strong>Aadhaar safety note:</strong> We do not ask users to enter or submit their Aadhaar number on this website. If Aadhaar is used later, it should be voluntary and handled through authorised/offline verification methods such as Aadhaar offline QR verification, without publicly displaying personal details.</p>
+        </div>
+        <div class="verification-card">
+          <h3>Verification options</h3>
+          <div class="verification-list">
+            <div><span>📱</span><strong>Mobile verification</strong><small>Confirm the member through their phone number.</small></div>
+            <div><span>✉️</span><strong>Email verification</strong><small>Confirm the member using the email they provide.</small></div>
+            <div><span>👨‍👩‍👧</span><strong>Family contact</strong><small>Optionally confirm through a trusted family or emergency contact.</small></div>
+            <div><span>🪪</span><strong>Voluntary ID verification</strong><small>Aadhaar offline QR or other ID may be used later where appropriate.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="join" class="section join-section">
       <div class="container join-grid">
         <div class="join-copy">
@@ -116,7 +137,7 @@
           <h2>Share your details and we will help connect you.</h2>
           <p>Fill in the details below and send them to Senior Social India. We will review each request before connecting people, so personal details are not displayed publicly on the website.</p>
           <div class="privacy-note">
-            <strong>Safe first:</strong> We recommend starting with email or phone verification before arranging any senior group or individual connection.
+            <strong>Safe first:</strong> We recommend starting with email, phone or family contact verification before arranging any senior group or individual connection.
           </div>
         </div>
 
@@ -164,9 +185,25 @@
             </select>
           </div>
 
+          <div class="form-row">
+            <label for="verificationMethod">Preferred verification method</label>
+            <select id="verificationMethod" name="Preferred verification method">
+              <option value="Mobile verification">Mobile verification</option>
+              <option value="Email verification">Email verification</option>
+              <option value="Family or emergency contact confirmation">Family or emergency contact confirmation</option>
+              <option value="Aadhaar offline QR verification if voluntarily provided later">Aadhaar offline QR verification if voluntarily provided later</option>
+              <option value="Other government ID if preferred">Other government ID if preferred</option>
+            </select>
+          </div>
+
+          <label class="consent-line">
+            <input id="correctInfo" name="Correct information declaration" type="checkbox" required />
+            I confirm that the information provided is correct and belongs to me.
+          </label>
+
           <label class="consent-line">
             <input id="consent" name="Consent" type="checkbox" required />
-            I agree to be contacted by Senior Social India regarding this enquiry.
+            I agree to be contacted by Senior Social India regarding this enquiry and understand that my details will not be published publicly.
           </label>
 
           <button type="submit" class="btn form-submit">Send Details</button>
