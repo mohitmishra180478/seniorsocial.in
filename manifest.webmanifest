@@ -1,7 +1,7 @@
 {
-  "name": "Senior Social India",
+  "name": "Senior Social",
   "short_name": "Senior Social",
-  "description": "A safe senior community app for connection, activities and companionship in India.",
+  "description": "A safe senior community app for connection, activities and companionship.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
