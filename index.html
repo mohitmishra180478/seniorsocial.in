@@ -109,11 +109,69 @@
       </div>
     </section>
 
-    <section id="join" class="section cta-section">
-      <div class="container cta-card">
-        <h2>Be part of a caring senior community.</h2>
-        <p>We are building a warm network for seniors across India. Register your interest and we will keep you updated as Senior Social India grows.</p>
-        <a href="mailto:info@seniorsocial.in" class="btn">Email info@seniorsocial.in</a>
+    <section id="join" class="section join-section">
+      <div class="container join-grid">
+        <div class="join-copy">
+          <p class="section-label">Join Senior Social</p>
+          <h2>Share your details and we will help connect you.</h2>
+          <p>Fill in the details below and send them to Senior Social India. We will review each request before connecting people, so personal details are not displayed publicly on the website.</p>
+          <div class="privacy-note">
+            <strong>Safe first:</strong> We recommend starting with email or phone verification before arranging any senior group or individual connection.
+          </div>
+        </div>
+
+        <form id="joinForm" class="join-form">
+          <div class="form-row">
+            <label for="fullName">Full name *</label>
+            <input id="fullName" name="Full name" type="text" required placeholder="Enter full name" />
+          </div>
+
+          <div class="form-row two-cols">
+            <div>
+              <label for="age">Age</label>
+              <input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" />
+            </div>
+            <div>
+              <label for="city">City *</label>
+              <input id="city" name="City" type="text" required placeholder="e.g. Delhi" />
+            </div>
+          </div>
+
+          <div class="form-row two-cols">
+            <div>
+              <label for="phone">Mobile number *</label>
+              <input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="Email" type="email" placeholder="Enter email address" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="interests">Interests</label>
+            <textarea id="interests" name="Interests" rows="3" placeholder="Tea groups, walks, music, bhajan, yoga, books, travel, volunteering..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="lookingFor">What are you looking for?</label>
+            <select id="lookingFor" name="Looking for">
+              <option value="Friendship and companionship">Friendship and companionship</option>
+              <option value="Group activities and events">Group activities and events</option>
+              <option value="Hobby or learning groups">Hobby or learning groups</option>
+              <option value="Wellness or walking groups">Wellness or walking groups</option>
+              <option value="Family enquiry for a senior">Family enquiry for a senior</option>
+            </select>
+          </div>
+
+          <label class="consent-line">
+            <input id="consent" name="Consent" type="checkbox" required />
+            I agree to be contacted by Senior Social India regarding this enquiry.
+          </label>
+
+          <button type="submit" class="btn form-submit">Send Details</button>
+          <p class="form-help">This will open your email app with the details ready to send to info@seniorsocial.in.</p>
+        </form>
       </div>
     </section>
 
