@@ -27,6 +27,7 @@
         <a href="#safety">Safety</a>
         <a href="#verification">Verification</a>
         <a href="#join">Join</a>
+        <a href="admin.html">Admin</a>
         <a href="#contact" class="btn btn-small">Contact</a>
       </div>
     </nav>
@@ -67,26 +68,10 @@
         <p class="section-label">Activities</p>
         <h2>Meaningful ways to stay active and connected.</h2>
         <div class="cards">
-          <article class="card">
-            <span>☕</span>
-            <h3>Tea & Talk Circles</h3>
-            <p>Friendly local gatherings where seniors can meet, talk and build companionship.</p>
-          </article>
-          <article class="card">
-            <span>🎨</span>
-            <h3>Hobbies & Learning</h3>
-            <p>Interest groups for music, art, books, technology, wellness and lifelong learning.</p>
-          </article>
-          <article class="card">
-            <span>🧘</span>
-            <h3>Wellness Sessions</h3>
-            <p>Gentle fitness, yoga, walking groups and wellbeing-led activities.</p>
-          </article>
-          <article class="card">
-            <span>🎉</span>
-            <h3>Community Events</h3>
-            <p>Festival meetups, birthdays, cultural events and safe social outings.</p>
-          </article>
+          <article class="card"><span>☕</span><h3>Tea & Talk Circles</h3><p>Friendly local gatherings where seniors can meet, talk and build companionship.</p></article>
+          <article class="card"><span>🎨</span><h3>Hobbies & Learning</h3><p>Interest groups for music, art, books, technology, wellness and lifelong learning.</p></article>
+          <article class="card"><span>🧘</span><h3>Wellness Sessions</h3><p>Gentle fitness, yoga, walking groups and wellbeing-led activities.</p></article>
+          <article class="card"><span>🎉</span><h3>Community Events</h3><p>Festival meetups, birthdays, cultural events and safe social outings.</p></article>
         </div>
       </div>
     </section>
@@ -134,10 +119,10 @@
       <div class="container join-grid">
         <div class="join-copy">
           <p class="section-label">Join Senior Social</p>
-          <h2>Share your details and we will help connect you.</h2>
-          <p>Fill in the details below and send them to Senior Social India. We will review each request before connecting people, so personal details are not displayed publicly on the website.</p>
+          <h2>Create a verified interest registration.</h2>
+          <p>Fill in the details below. Your registration will be saved securely for admin review. Personal details are not displayed publicly on the website.</p>
           <div class="privacy-note">
-            <strong>Safe first:</strong> We recommend starting with email, phone or family contact verification before arranging any senior group or individual connection.
+            <strong>Safe first:</strong> Members should be email/phone/family verified and admin-approved before any senior group or individual connection is arranged.
           </div>
         </div>
 
@@ -148,25 +133,18 @@
           </div>
 
           <div class="form-row two-cols">
-            <div>
-              <label for="age">Age</label>
-              <input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" />
-            </div>
-            <div>
-              <label for="city">City *</label>
-              <input id="city" name="City" type="text" required placeholder="e.g. Delhi" />
-            </div>
+            <div><label for="age">Age</label><input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" /></div>
+            <div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div>
           </div>
 
           <div class="form-row two-cols">
-            <div>
-              <label for="phone">Mobile number *</label>
-              <input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" />
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input id="email" name="Email" type="email" placeholder="Enter email address" />
-            </div>
+            <div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" /></div>
+            <div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div>
+          </div>
+
+          <div class="form-row">
+            <label for="password">Create password *</label>
+            <input id="password" name="Password" type="password" required minlength="6" placeholder="Minimum 6 characters" />
           </div>
 
           <div class="form-row">
@@ -196,56 +174,25 @@
             </select>
           </div>
 
-          <label class="consent-line">
-            <input id="correctInfo" name="Correct information declaration" type="checkbox" required />
-            I confirm that the information provided is correct and belongs to me.
-          </label>
+          <label class="consent-line"><input id="correctInfo" name="Correct information declaration" type="checkbox" required /> I confirm that the information provided is correct and belongs to me.</label>
+          <label class="consent-line"><input id="consent" name="Consent" type="checkbox" required /> I agree to be contacted by Senior Social India regarding this enquiry and understand that my details will not be published publicly.</label>
 
-          <label class="consent-line">
-            <input id="consent" name="Consent" type="checkbox" required />
-            I agree to be contacted by Senior Social India regarding this enquiry and understand that my details will not be published publicly.
-          </label>
-
-          <button type="submit" class="btn form-submit">Send Details</button>
-          <p class="form-help">This will open your email app with the details ready to send to info@seniorsocial.in.</p>
+          <button type="submit" class="btn form-submit">Register Interest</button>
+          <p id="formMessage" class="form-help">After submission, we will send an email verification link where possible and save the profile for admin review.</p>
         </form>
       </div>
     </section>
 
     <section id="contact" class="section contact-section">
       <div class="container contact-grid">
-        <div>
-          <p class="section-label">Contact</p>
-          <h2>Speak to Senior Social India</h2>
-          <p>For member enquiries, family support, partnerships or local activity ideas, please contact us.</p>
-        </div>
-        <div class="contact-card">
-          <p>Email</p>
-          <a href="mailto:info@seniorsocial.in">info@seniorsocial.in</a>
-          <p>Website</p>
-          <a href="https://seniorsocial.in">seniorsocial.in</a>
-          <p>Location</p>
-          <strong>India</strong>
-        </div>
+        <div><p class="section-label">Contact</p><h2>Speak to Senior Social India</h2><p>For member enquiries, family support, partnerships or local activity ideas, please contact us.</p></div>
+        <div class="contact-card"><p>Email</p><a href="mailto:info@seniorsocial.in">info@seniorsocial.in</a><p>Website</p><a href="https://seniorsocial.in">seniorsocial.in</a><p>Location</p><strong>India</strong></div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <a href="#home" class="footer-logo" aria-label="Senior Social India home">
-        <span class="logo-mark">
-          <img src="assets/senior-social-mark.svg" alt="" />
-        </span>
-        <span class="logo-text">
-          <strong>Senior Social India</strong>
-          <small>Connect • Engage • Belong</small>
-        </span>
-      </a>
-      <p>Because every senior deserves connection, care and community.</p>
-    </div>
-  </footer>
+  <footer class="footer"><div class="container footer-inner"><a href="#home" class="footer-logo" aria-label="Senior Social India home"><span class="logo-mark"><img src="assets/senior-social-mark.svg" alt="" /></span><span class="logo-text"><strong>Senior Social India</strong><small>Connect • Engage • Belong</small></span></a><p>Because every senior deserves connection, care and community.</p></div></footer>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
