@@ -26,19 +26,17 @@ class DefaultFirebaseOptions {
     measurementId: 'G-4WHDCFZX46',
   );
 
-  // Replace these values after adding the Android app in Firebase Console.
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'PASTE_ANDROID_API_KEY',
-    appId: 'PASTE_ANDROID_APP_ID',
+    apiKey: 'AIzaSyAOc25bxrbFDRsgY8CGLeXYlLw70BfSkjA',
+    appId: '1:21502516857:android:a4130b87af2ae13fcc3ea8',
     messagingSenderId: '21502516857',
     projectId: 'senior-social-india',
     storageBucket: 'senior-social-india.firebasestorage.app',
   );
 
-  // Replace these values after adding the iOS app in Firebase Console.
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'PASTE_IOS_API_KEY',
-    appId: 'PASTE_IOS_APP_ID',
+    apiKey: 'AIzaSyBumQDy7bK-K6hWZPTpCe2Zpl7coxpMkI4',
+    appId: '1:21502516857:ios:caa78eb4596ab96ecc3ea8',
     messagingSenderId: '21502516857',
     projectId: 'senior-social-india',
     storageBucket: 'senior-social-india.firebasestorage.app',
