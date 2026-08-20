@@ -32,20 +32,25 @@ jobs:
         working-directory: mobile_app
         run: flutter create --platforms=android --project-name senior_social .
 
-      - name: Set Android package name and app label
+      - name: Set Android package name, app label and min SDK
         working-directory: mobile_app
         run: |
           if [ -f android/app/build.gradle ]; then
             sed -i "s/applicationId \"com.example.senior_social\"/applicationId \"in.seniorsocial.app\"/g" android/app/build.gradle
             sed -i "s/namespace \"com.example.senior_social\"/namespace \"in.seniorsocial.app\"/g" android/app/build.gradle
+            sed -i "s/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/g" android/app/build.gradle
+            sed -i "s/minSdkVersion 21/minSdkVersion 23/g" android/app/build.gradle
           fi
           if [ -f android/app/build.gradle.kts ]; then
             sed -i 's/applicationId = "com.example.senior_social"/applicationId = "in.seniorsocial.app"/g' android/app/build.gradle.kts
             sed -i 's/namespace = "com.example.senior_social"/namespace = "in.seniorsocial.app"/g' android/app/build.gradle.kts
+            sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/g' android/app/build.gradle.kts
+            sed -i 's/minSdk = 21/minSdk = 23/g' android/app/build.gradle.kts
           fi
           if [ -f android/app/src/main/AndroidManifest.xml ]; then
             sed -i 's/android:label="senior_social"/android:label="Senior Social"/g' android/app/src/main/AndroidManifest.xml
           fi
+          grep -R "minSdk" android/app || true
 
       - name: Remove generated Flutter test
         working-directory: mobile_app
