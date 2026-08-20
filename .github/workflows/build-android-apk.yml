@@ -32,18 +32,18 @@ jobs:
         working-directory: mobile_app
         run: flutter create --platforms=android --project-name senior_social .
 
-      - name: Set Android package name, app label and min SDK
+      - name: Set Android package, app label, min SDK and launcher activity
         working-directory: mobile_app
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
+          import shutil
 
-          replacements = {
-              'com.example.senior_social': 'in.seniorsocial.app',
-              'android:label="senior_social"': 'android:label="Senior Social"',
-          }
+          old_pkg = 'com.example.senior_social'
+          new_pkg = 'in.seniorsocial.app'
 
+          # Update Gradle and manifest package values
           targets = []
           targets.extend(Path('android/app').glob('build.gradle*'))
           manifest = Path('android/app/src/main/AndroidManifest.xml')
@@ -52,9 +52,8 @@ jobs:
 
           for path in targets:
               text = path.read_text()
-              for old, new in replacements.items():
-                  text = text.replace(old, new)
-
+              text = text.replace(old_pkg, new_pkg)
+              text = text.replace('android:label="senior_social"', 'android:label="Senior Social"')
               text = text.replace('minSdkVersion flutter.minSdkVersion', 'minSdkVersion 23')
               text = text.replace('minSdkVersion 21', 'minSdkVersion 23')
               text = text.replace('minSdk = flutter.minSdkVersion', 'minSdk = 23')
@@ -63,8 +62,27 @@ jobs:
               text = re.sub(r'minSdkVersion\s+21', 'minSdkVersion 23', text)
               text = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 23', text)
               text = re.sub(r'minSdk\s*=\s*21', 'minSdk = 23', text)
-
               path.write_text(text)
+
+          # Ensure MainActivity exists in the correct Android package path.
+          kotlin_root = Path('android/app/src/main/kotlin')
+          correct_dir = kotlin_root / 'in' / 'seniorsocial' / 'app'
+          correct_dir.mkdir(parents=True, exist_ok=True)
+          (correct_dir / 'MainActivity.kt').write_text(
+              'package in.seniorsocial.app\n\n'
+              'import io.flutter.embedding.android.FlutterActivity\n\n'
+              'class MainActivity: FlutterActivity()\n'
+          )
+
+          # Remove the generated old package activity to avoid class/path confusion.
+          old_dir = kotlin_root / 'com' / 'example' / 'senior_social'
+          if old_dir.exists():
+              shutil.rmtree(old_dir)
+
+          print('--- MainActivity files ---')
+          for path in kotlin_root.rglob('MainActivity.kt'):
+              print(path)
+              print(path.read_text())
 
           print('--- Android Gradle files after update ---')
           for path in Path('android/app').glob('build.gradle*'):
