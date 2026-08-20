@@ -43,7 +43,6 @@ jobs:
           old_pkg = 'com.example.senior_social'
           new_pkg = 'in.seniorsocial.app'
 
-          # Update Gradle and manifest package values
           targets = []
           targets.extend(Path('android/app').glob('build.gradle*'))
           manifest = Path('android/app/src/main/AndroidManifest.xml')
@@ -64,17 +63,15 @@ jobs:
               text = re.sub(r'minSdk\s*=\s*21', 'minSdk = 23', text)
               path.write_text(text)
 
-          # Ensure MainActivity exists in the correct Android package path.
           kotlin_root = Path('android/app/src/main/kotlin')
           correct_dir = kotlin_root / 'in' / 'seniorsocial' / 'app'
           correct_dir.mkdir(parents=True, exist_ok=True)
           (correct_dir / 'MainActivity.kt').write_text(
-              'package in.seniorsocial.app\n\n'
+              'package `in`.seniorsocial.app\n\n'
               'import io.flutter.embedding.android.FlutterActivity\n\n'
               'class MainActivity: FlutterActivity()\n'
           )
 
-          # Remove the generated old package activity to avoid class/path confusion.
           old_dir = kotlin_root / 'com' / 'example' / 'senior_social'
           if old_dir.exists():
               shutil.rmtree(old_dir)
