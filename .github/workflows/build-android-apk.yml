@@ -43,11 +43,12 @@ jobs:
             sed -i 's/applicationId = "com.example.senior_social"/applicationId = "in.seniorsocial.app"/g' android/app/build.gradle.kts
             sed -i 's/namespace = "com.example.senior_social"/namespace = "in.seniorsocial.app"/g' android/app/build.gradle.kts
           fi
+          if [ -f android/app/src/main/AndroidManifest.xml ]; then
+            sed -i 's/android:label="senior_social"/android:label="Senior Social"/g' android/app/src/main/AndroidManifest.xml
+          fi
 
-      - name: Copy Android Firebase config
-        run: |
-          mkdir -p mobile_app/android/app
-          cp mobile_app/firebase/android/google-services.json mobile_app/android/app/google-services.json
+      - name: Verify Android Firebase config
+        run: test -f mobile_app/android/app/google-services.json
 
       - name: Install dependencies
         working-directory: mobile_app
