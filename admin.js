@@ -15,7 +15,7 @@ import {
   query,
   orderBy
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
-import { firebaseConfig, isFirebaseConfigured, adminUIDs } from './firebase-config.js';
+import { firebaseConfig, isFirebaseConfigured, adminUIDs } from './firebase-config.js?v=20260823-admin-uid';
 
 const configWarning = document.querySelector('#configWarning');
 const loginPanel = document.querySelector('#loginPanel');
@@ -163,13 +163,14 @@ if (!isFirebaseConfigured) {
       hide(loginPanel);
       show(dashboardPanel);
       show(logoutBtn);
+      message('Admin access granted.');
       await loadUsers();
     } else {
       show(loginPanel);
       hide(dashboardPanel);
       hide(logoutBtn);
       if (user && !isAllowedAdmin(user)) {
-        message('This account is not authorised as admin.', true);
+        message(`This account is not authorised as admin. Logged-in UID: ${user.uid}`, true);
         await signOut(auth);
       }
     }
