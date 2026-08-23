@@ -17,12 +17,17 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 import { firebaseConfig, isFirebaseConfigured, adminUIDs } from './firebase-config.js?v=20260823-admin-uid';
 
+const HARD_CODED_ADMIN_UIDS = [
+  'ItdvPuAxRobiOqFb13pCmjbm5zq1'
+];
+
 const configWarning = document.querySelector('#configWarning');
 const loginPanel = document.querySelector('#loginPanel');
 const dashboardPanel = document.querySelector('#dashboardPanel');
 const adminLoginForm = document.querySelector('#adminLoginForm');
 const adminEmail = document.querySelector('#adminEmail');
 const adminPassword = document.querySelector('#adminPassword');
+const togglePassword = document.querySelector('#togglePassword');
 const loginMessage = document.querySelector('#loginMessage');
 const logoutBtn = document.querySelector('#logoutBtn');
 const usersTableBody = document.querySelector('#usersTableBody');
@@ -49,11 +54,17 @@ function message(text, isError = false) {
   loginMessage.classList.toggle('success-text', !isError);
 }
 
+function normalise(value) {
+  return String(value || '').trim();
+}
+
 function isAllowedAdmin(user) {
   if (!user) return false;
-  if (!adminUIDs || adminUIDs.length === 0) return true;
-  if (adminUIDs.some((uid) => uid.includes('PASTE_'))) return true;
-  return adminUIDs.includes(user.uid);
+  const uid = normalise(user.uid);
+  const configuredUIDs = Array.isArray(adminUIDs) ? adminUIDs.map(normalise) : [];
+  const allowedUIDs = [...HARD_CODED_ADMIN_UIDS.map(normalise), ...configuredUIDs];
+  if (allowedUIDs.some((allowedUid) => allowedUid.includes('PASTE_'))) return true;
+  return allowedUIDs.includes(uid);
 }
 
 function renderStats(users) {
@@ -137,6 +148,12 @@ if (!isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+
+  togglePassword?.addEventListener('click', () => {
+    const isHidden = adminPassword.type === 'password';
+    adminPassword.type = isHidden ? 'text' : 'password';
+    togglePassword.textContent = isHidden ? 'Hide password' : 'Show password';
+  });
 
   adminLoginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
