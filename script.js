@@ -11,6 +11,12 @@ import {
   setDoc,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
 import { firebaseConfig, isFirebaseConfigured } from './firebase-config.js';
 
 const menuToggle = document.querySelector('.menu-toggle');
@@ -25,11 +31,13 @@ const installAppBtn = document.querySelector('#installAppBtn');
 let app = null;
 let auth = null;
 let db = null;
+let storage = null;
 
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+  storage = getStorage(app);
 }
 
 if (year) {
@@ -77,11 +85,38 @@ function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '');
 }
 
+function getFile(formData, fieldName) {
+  const file = formData.get(fieldName);
+  return file instanceof File && file.size > 0 ? file : null;
+}
+
+function validateImageFile(file, label) {
+  if (!file) return;
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!allowed.includes(file.type)) {
+    throw new Error(`${label} must be a JPG, PNG or WEBP image.`);
+  }
+  const maxBytes = 5 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    throw new Error(`${label} must be less than 5 MB.`);
+  }
+}
+
+async function uploadUserFile(userUid, file, type) {
+  if (!file || !storage) return null;
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const filePath = `users/${userUid}/${type}-${Date.now()}-${safeName}`;
+  const fileRef = ref(storage, filePath);
+  await uploadBytes(fileRef, file);
+  const url = await getDownloadURL(fileRef);
+  return { path: filePath, url, name: file.name, contentType: file.type, size: file.size };
+}
+
 if (joinForm) {
   joinForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    if (!isFirebaseConfigured || !auth || !db) {
+    if (!isFirebaseConfigured || !auth || !db || !storage) {
       setMessage('Firebase is not configured yet. Please contact Senior Social directly at info@seniorsocial.in.', true);
       return;
     }
@@ -99,6 +134,8 @@ if (joinForm) {
       const ageRaw = String(formData.get('Age') || '').trim();
       const age = Number(ageRaw);
       const phone = onlyDigits(formData.get('Mobile number'));
+      const passportPhotoFile = getFile(formData, 'Passport size photo');
+      const aadhaarPhotoFile = getFile(formData, 'Aadhaar card picture');
 
       if (!email || !password || !fullName || !ageRaw || !phone) {
         throw new Error('Please complete full name, age, mobile number, email and password.');
@@ -112,11 +149,22 @@ if (joinForm) {
         throw new Error('Mobile number must be exactly 10 digits. Please enter a valid 10 digit mobile number.');
       }
 
+      if (!passportPhotoFile) {
+        throw new Error('Current passport size photo is mandatory.');
+      }
+
+      validateImageFile(passportPhotoFile, 'Passport size photo');
+      validateImageFile(aadhaarPhotoFile, 'Aadhaar card picture');
+
       const credential = await createUserWithEmailAndPassword(auth, email, password);
       const user = credential.user;
 
       await updateProfile(user, { displayName: fullName });
       await sendEmailVerification(user);
+
+      setMessage('Uploading documents securely...');
+      const passportPhoto = await uploadUserFile(user.uid, passportPhotoFile, 'passport-photo');
+      const aadhaarCardPicture = aadhaarPhotoFile ? await uploadUserFile(user.uid, aadhaarPhotoFile, 'aadhaar-card') : null;
 
       const profile = {
         uid: user.uid,
@@ -128,11 +176,15 @@ if (joinForm) {
         interests: String(formData.get('Interests') || '').trim(),
         lookingFor: String(formData.get('Looking for') || '').trim(),
         preferredVerificationMethod: String(formData.get('Preferred verification method') || '').trim(),
+        passportPhoto,
+        aadhaarCardPicture,
         correctInformationDeclaration: Boolean(formData.get('Correct information declaration')),
         consent: Boolean(formData.get('Consent')),
         emailVerified: user.emailVerified,
         phoneVerified: false,
         familyContactVerified: false,
+        identityDocumentUploaded: Boolean(aadhaarCardPicture),
+        passportPhotoUploaded: Boolean(passportPhoto),
         adminApproved: false,
         profileStatus: 'Pending Review',
         createdAt: serverTimestamp(),
@@ -153,6 +205,9 @@ if (joinForm) {
       }
       if (error.code === 'auth/invalid-email') {
         friendlyMessage = 'Please enter a valid email address.';
+      }
+      if (error.code === 'storage/unauthorized') {
+        friendlyMessage = 'Document upload is not allowed yet. Please enable Firebase Storage and update Storage rules.';
       }
       setMessage(friendlyMessage, true);
     } finally {
