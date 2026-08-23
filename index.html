@@ -129,8 +129,8 @@
 
         <form id="joinForm" class="join-form">
           <div class="form-row"><label for="fullName">Full name *</label><input id="fullName" name="Full name" type="text" required placeholder="Enter full name" /></div>
-          <div class="form-row two-cols"><div><label for="age">Age</label><input id="age" name="Age" type="number" min="50" max="110" placeholder="e.g. 68" /></div><div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div></div>
-          <div class="form-row two-cols"><div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" required placeholder="Enter mobile number" /></div><div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div></div>
+          <div class="form-row two-cols"><div><label for="age">Age *</label><input id="age" name="Age" type="number" min="60" max="110" required placeholder="e.g. 68" /></div><div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div></div>
+          <div class="form-row two-cols"><div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" inputmode="numeric" pattern="[0-9]{10}" minlength="10" maxlength="10" required placeholder="10 digit mobile number" /></div><div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div></div>
           <div class="form-row"><label for="password">Create password *</label><input id="password" name="Password" type="password" required minlength="6" placeholder="Minimum 6 characters" /></div>
           <div class="form-row"><label for="interests">Interests</label><textarea id="interests" name="Interests" rows="3" placeholder="Tea groups, walks, music, bhajan, yoga, books, travel, volunteering..."></textarea></div>
           <div class="form-row"><label for="lookingFor">What are you looking for?</label><select id="lookingFor" name="Looking for"><option value="Friendship and companionship">Friendship and companionship</option><option value="Group activities and events">Group activities and events</option><option value="Hobby or learning groups">Hobby or learning groups</option><option value="Wellness or walking groups">Wellness or walking groups</option><option value="Family enquiry for a senior">Family enquiry for a senior</option></select></div>
@@ -153,6 +153,6 @@
 
   <footer class="footer"><div class="container footer-inner"><a href="#home" class="footer-logo" aria-label="Senior Social home"><span class="logo-mark"><img src="assets/senior-social-mark.svg" alt="" /></span><span class="logo-text"><strong>Senior Social</strong><small>Connect • Engage • Belong</small></span></a><p><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms & Safety</a></p></div></footer>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="script.js?v=20260823-validation"></script>
 </body>
 </html>
