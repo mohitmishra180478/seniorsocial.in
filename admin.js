@@ -18,7 +18,12 @@ import {
 import { firebaseConfig, isFirebaseConfigured, adminUIDs } from './firebase-config.js?v=20260823-admin-uid';
 
 const HARD_CODED_ADMIN_UIDS = [
-  'ItdvPuAxRobiOqFb13pCmjbm5zq1'
+  'ItdvPuAxRobiOqFb13pCmjbm5zq1',
+  'ltdvPuAxRobiOqFb13pCmjbm5zq1'
+];
+
+const HARD_CODED_ADMIN_EMAILS = [
+  'monica9d@hotmail.com'
 ];
 
 const configWarning = document.querySelector('#configWarning');
@@ -61,10 +66,12 @@ function normalise(value) {
 function isAllowedAdmin(user) {
   if (!user) return false;
   const uid = normalise(user.uid);
+  const email = normalise(user.email).toLowerCase();
   const configuredUIDs = Array.isArray(adminUIDs) ? adminUIDs.map(normalise) : [];
   const allowedUIDs = [...HARD_CODED_ADMIN_UIDS.map(normalise), ...configuredUIDs];
+  const allowedEmails = HARD_CODED_ADMIN_EMAILS.map((item) => normalise(item).toLowerCase());
   if (allowedUIDs.some((allowedUid) => allowedUid.includes('PASTE_'))) return true;
-  return allowedUIDs.includes(uid);
+  return allowedUIDs.includes(uid) || allowedEmails.includes(email);
 }
 
 function renderStats(users) {
