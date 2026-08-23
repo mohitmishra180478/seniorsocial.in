@@ -153,6 +153,10 @@ if (joinForm) {
         throw new Error('Current passport size photo is mandatory.');
       }
 
+      if (!aadhaarPhotoFile) {
+        throw new Error('Aadhaar card picture is mandatory for internal records. It is not used for email or mobile verification.');
+      }
+
       validateImageFile(passportPhotoFile, 'Passport size photo');
       validateImageFile(aadhaarPhotoFile, 'Aadhaar card picture');
 
@@ -164,7 +168,7 @@ if (joinForm) {
 
       setMessage('Uploading documents securely...');
       const passportPhoto = await uploadUserFile(user.uid, passportPhotoFile, 'passport-photo');
-      const aadhaarCardPicture = aadhaarPhotoFile ? await uploadUserFile(user.uid, aadhaarPhotoFile, 'aadhaar-card') : null;
+      const aadhaarCardPicture = await uploadUserFile(user.uid, aadhaarPhotoFile, 'aadhaar-card');
 
       const profile = {
         uid: user.uid,
@@ -183,7 +187,7 @@ if (joinForm) {
         emailVerified: user.emailVerified,
         phoneVerified: false,
         familyContactVerified: false,
-        identityDocumentUploaded: Boolean(aadhaarCardPicture),
+        identityDocumentUploaded: true,
         passportPhotoUploaded: Boolean(passportPhoto),
         adminApproved: false,
         profileStatus: 'Pending Review',
