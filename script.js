@@ -19,6 +19,9 @@ const year = document.querySelector('#year');
 const joinForm = document.querySelector('#joinForm');
 const formMessage = document.querySelector('#formMessage');
 
+let deferredInstallPrompt = null;
+const installAppBtn = document.querySelector('#installAppBtn');
+
 let app = null;
 let auth = null;
 let db = null;
@@ -32,6 +35,26 @@ if (isFirebaseConfigured) {
 if (year) {
   year.textContent = new Date().getFullYear();
 }
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => null);
+  });
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installAppBtn?.classList.remove('hidden');
+});
+
+installAppBtn?.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  installAppBtn.classList.add('hidden');
+});
 
 if (menuToggle && navLinks) {
   menuToggle.addEventListener('click', () => {
@@ -50,12 +73,16 @@ function setMessage(message, isError = false) {
   formMessage.classList.toggle('success-text', !isError);
 }
 
+function onlyDigits(value) {
+  return String(value || '').replace(/\D/g, '');
+}
+
 if (joinForm) {
   joinForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     if (!isFirebaseConfigured || !auth || !db) {
-      setMessage('Firebase is not configured yet. Please contact Senior Social India directly at info@seniorsocial.in.', true);
+      setMessage('Firebase is not configured yet. Please contact Senior Social directly at info@seniorsocial.in.', true);
       return;
     }
 
@@ -69,10 +96,20 @@ if (joinForm) {
       const email = String(formData.get('Email') || '').trim().toLowerCase();
       const password = String(formData.get('Password') || '').trim();
       const fullName = String(formData.get('Full name') || '').trim();
-      const phone = String(formData.get('Mobile number') || '').trim();
+      const ageRaw = String(formData.get('Age') || '').trim();
+      const age = Number(ageRaw);
+      const phone = onlyDigits(formData.get('Mobile number'));
 
-      if (!email || !password || !fullName || !phone) {
-        throw new Error('Please complete full name, mobile number, email and password.');
+      if (!email || !password || !fullName || !ageRaw || !phone) {
+        throw new Error('Please complete full name, age, mobile number, email and password.');
+      }
+
+      if (!Number.isInteger(age) || age < 60) {
+        throw new Error('Age is mandatory and must be 60 years or above.');
+      }
+
+      if (phone.length !== 10) {
+        throw new Error('Mobile number must be exactly 10 digits. Please enter a valid 10 digit mobile number.');
       }
 
       const credential = await createUserWithEmailAndPassword(auth, email, password);
@@ -84,7 +121,7 @@ if (joinForm) {
       const profile = {
         uid: user.uid,
         fullName,
-        age: formData.get('Age') ? Number(formData.get('Age')) : null,
+        age,
         city: String(formData.get('City') || '').trim(),
         phone,
         email,
@@ -105,11 +142,11 @@ if (joinForm) {
       await setDoc(doc(db, 'users', user.uid), profile);
 
       joinForm.reset();
-      setMessage('Registration saved successfully. Please check your email and click the verification link. Senior Social India will review the profile before connecting members.');
+      setMessage('Registration saved successfully. Please check your email and click the verification link. Senior Social will review the profile before connecting members.');
     } catch (error) {
       let friendlyMessage = error.message || 'Unable to save registration. Please try again.';
       if (error.code === 'auth/email-already-in-use') {
-        friendlyMessage = 'This email is already registered. Please use a different email or contact Senior Social India.';
+        friendlyMessage = 'This email is already registered. Please use a different email or contact Senior Social.';
       }
       if (error.code === 'auth/weak-password') {
         friendlyMessage = 'Please use a password with at least 6 characters.';
