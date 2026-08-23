@@ -1,4 +1,4 @@
-// Senior Social India Firebase configuration
+// Senior Social Firebase configuration
 // Firebase project: senior-social-india
 
 export const firebaseConfig = {
@@ -13,8 +13,7 @@ export const firebaseConfig = {
 
 export const isFirebaseConfigured = true;
 
-// Add the Firebase Auth UID of your admin account here after you create your admin login.
-// You can find it in Firebase Console > Authentication > Users after you register/login once.
+// Firebase Auth UID values allowed to access the admin dashboard.
 export const adminUIDs = [
-  "PASTE_ADMIN_FIREBASE_UID_HERE"
+  "ItdvPuAxRobiOqFb13pCmjbm5zq1"
 ];
