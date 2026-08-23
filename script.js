@@ -102,6 +102,17 @@ function validateImageFile(file, label) {
   }
 }
 
+function addLegalUndertakingCheckbox() {
+  if (!joinForm || document.querySelector('#legalUndertaking')) return;
+  const submitButton = joinForm.querySelector('button[type="submit"]');
+  if (!submitButton) return;
+
+  const undertaking = document.createElement('label');
+  undertaking.className = 'consent-line';
+  undertaking.innerHTML = '<input id="legalUndertaking" name="Legal undertaking" type="checkbox" required /> I confirm that I am a genuine user and I undertake to use Senior Social only for lawful, respectful and genuine social connection purposes. I understand that any abuse, misconduct, harassment, fraud, illegal activity, misuse of the platform or unsafe behaviour may lead to removal from Senior Social and appropriate proceedings/action under applicable Indian law.';
+  submitButton.parentNode.insertBefore(undertaking, submitButton);
+}
+
 async function uploadUserFile(userUid, file, type) {
   if (!file || !storage) return null;
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -111,6 +122,8 @@ async function uploadUserFile(userUid, file, type) {
   const url = await getDownloadURL(fileRef);
   return { path: filePath, url, name: file.name, contentType: file.type, size: file.size };
 }
+
+addLegalUndertakingCheckbox();
 
 if (joinForm) {
   joinForm.addEventListener('submit', async (event) => {
@@ -136,6 +149,7 @@ if (joinForm) {
       const phone = onlyDigits(formData.get('Mobile number'));
       const passportPhotoFile = getFile(formData, 'Passport size photo');
       const aadhaarPhotoFile = getFile(formData, 'Aadhaar card picture');
+      const legalUndertakingAccepted = Boolean(formData.get('Legal undertaking'));
 
       if (!email || !password || !fullName || !ageRaw || !phone) {
         throw new Error('Please complete full name, age, mobile number, email and password.');
@@ -155,6 +169,10 @@ if (joinForm) {
 
       if (!aadhaarPhotoFile) {
         throw new Error('Aadhaar card picture is mandatory for internal records. It is not used for email or mobile verification.');
+      }
+
+      if (!legalUndertakingAccepted) {
+        throw new Error('Please accept the mandatory user undertaking before registering.');
       }
 
       validateImageFile(passportPhotoFile, 'Passport size photo');
@@ -184,6 +202,8 @@ if (joinForm) {
         aadhaarCardPicture,
         correctInformationDeclaration: Boolean(formData.get('Correct information declaration')),
         consent: Boolean(formData.get('Consent')),
+        legalUndertakingAccepted,
+        legalUndertakingText: 'I confirm that I am a genuine user and I undertake to use Senior Social only for lawful, respectful and genuine social connection purposes. I understand that any abuse, misconduct, harassment, fraud, illegal activity, misuse of the platform or unsafe behaviour may lead to removal from Senior Social and appropriate proceedings/action under applicable Indian law.',
         emailVerified: user.emailVerified,
         phoneVerified: false,
         familyContactVerified: false,
