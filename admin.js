@@ -79,7 +79,11 @@ function renderStats(users) {
   emailVerifiedUsers.textContent = users.filter((u) => u.emailVerified).length;
   phoneVerifiedUsers.textContent = users.filter((u) => u.phoneVerified).length;
   approvedUsers.textContent = users.filter((u) => u.adminApproved).length;
-  pendingUsers.textContent = users.filter((u) => (u.profileStatus || '').toLowerCase().includes('pending')).length;
+  pendingUsers.textContent = users.filter((u) => !u.adminApproved && (u.profileStatus || '').toLowerCase().includes('pending')).length;
+}
+
+function yesNo(value) {
+  return value ? 'Yes' : 'No';
 }
 
 function renderUsers(users) {
@@ -94,14 +98,16 @@ function renderUsers(users) {
   users.forEach((user) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${user.fullName || ''}</strong><br><small>${user.lookingFor || ''}</small></td>
+      <td><strong>${user.fullName || ''}</strong><br><small>${user.lookingFor || ''}</small><br><small>Age: ${user.age || 'Not provided'}</small></td>
       <td>${user.city || ''}</td>
       <td>${user.phone || ''}</td>
       <td>${user.email || ''}</td>
-      <td>${user.emailVerified ? 'Yes' : 'No'}</td>
-      <td>${user.phoneVerified ? 'Yes' : 'No'}</td>
+      <td>${yesNo(user.emailVerified)}</td>
+      <td>${yesNo(user.phoneVerified)}</td>
       <td>${user.profileStatus || 'Pending Review'}</td>
       <td class="table-actions">
+        <button data-action="verifyEmail" data-id="${user.uid}">Verify Email</button>
+        <button data-action="verifyPhone" data-id="${user.uid}">Verify Phone</button>
         <button data-action="approve" data-id="${user.uid}">Approve</button>
         <button data-action="pending" data-id="${user.uid}">Pending</button>
         <button data-action="block" data-id="${user.uid}">Block</button>
@@ -121,12 +127,14 @@ async function loadUsers() {
 function filterUsers() {
   const term = (userSearch.value || '').toLowerCase().trim();
   if (!term) return renderUsers(allUsers);
-  const filtered = allUsers.filter((u) => [u.fullName, u.city, u.phone, u.email, u.profileStatus].some((v) => String(v || '').toLowerCase().includes(term)));
+  const filtered = allUsers.filter((u) => [u.fullName, u.city, u.phone, u.email, u.profileStatus, u.age].some((v) => String(v || '').toLowerCase().includes(term)));
   renderUsers(filtered);
 }
 
 async function updateStatus(uid, action) {
   const statusMap = {
+    verifyEmail: { emailVerified: true },
+    verifyPhone: { phoneVerified: true },
     approve: { profileStatus: 'Admin Approved', adminApproved: true },
     pending: { profileStatus: 'Pending Review', adminApproved: false },
     block: { profileStatus: 'Blocked', adminApproved: false }
