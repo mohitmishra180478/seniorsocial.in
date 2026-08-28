@@ -10,7 +10,7 @@ on:
 jobs:
   build-ios-manual:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
@@ -33,15 +33,46 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :CFBundleName Senior Social" ios/Runner/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier in.seniorsocial.app" ios/Runner/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 13.0" ios/Runner/Info.plist || true
-          if [ -f ios/Podfile ]; then
-            sed -i '' "s/^# platform :ios.*/platform :ios, '13.0'/" ios/Podfile
-            sed -i '' "s/^platform :ios.*/platform :ios, '13.0'/" ios/Podfile
-            if ! grep -q "platform :ios" ios/Podfile; then
-              printf "platform :ios, '13.0'\n" | cat - ios/Podfile > ios/Podfile.tmp
-              mv ios/Podfile.tmp ios/Podfile
-            fi
-            if ! grep -q "IPHONEOS_DEPLOYMENT_TARGET" ios/Podfile; then
-              cat >> ios/Podfile <<'EOF'
+
+      - name: Install Flutter dependencies
+        working-directory: mobile_app
+        run: flutter pub get
+
+      - name: Create iOS Podfile with iOS 13 target
+        working-directory: mobile_app
+        run: |
+          cat > ios/Podfile <<'EOF'
+platform :ios, '13.0'
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "Generated.xcconfig must exist. Run flutter pub get first."
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in Generated.xcconfig."
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
@@ -52,15 +83,10 @@ post_install do |installer|
   end
 end
 EOF
-            fi
-          fi
 
-      - name: Install dependencies
-        working-directory: mobile_app
-        run: |
-          flutter pub get
-          cd ios
-          pod install --repo-update
+      - name: Install iOS pods
+        working-directory: mobile_app/ios
+        run: pod install --repo-update
 
       - name: Analyze Flutter app
         working-directory: mobile_app
