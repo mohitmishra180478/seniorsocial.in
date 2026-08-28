@@ -28,6 +28,7 @@ jobs:
         run: |
           flutter create . --platforms=ios --org in.seniorsocial --project-name senior_social
           test -f ios/Runner/GoogleService-Info.plist
+          rm -f test/widget_test.dart
           /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Senior Social" ios/Runner/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleName Senior Social" ios/Runner/Info.plist || true
           /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier in.seniorsocial.app" ios/Runner/Info.plist || true
