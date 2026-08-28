@@ -46,8 +46,8 @@
             <a href="#availability" class="btn btn-outline">Global Access</a>
           </div>
           <div class="install-card">
-            <strong>Mobile app ready:</strong>
-            <span>Install Senior Social on your phone from the browser menu.</span>
+            <strong>Free testing mode:</strong>
+            <span>Email verification is sent online. Mobile and document checks are manual admin checks.</span>
             <button id="installAppBtn" class="btn btn-small hidden" type="button">Install App</button>
           </div>
         </div>
@@ -81,7 +81,7 @@
 
     <section id="safety" class="section">
       <div class="container split reverse">
-        <div class="trust-box"><h3>Trusted & Safe</h3><ul><li>Family-assisted onboarding</li><li>Verified community groups</li><li>Clear contact support</li><li>Simple senior-friendly design</li></ul></div>
+        <div class="trust-box"><h3>Trusted & Safe</h3><ul><li>Family-assisted onboarding</li><li>Manual admin review</li><li>Clear contact support</li><li>Simple senior-friendly design</li></ul></div>
         <div><p class="section-label">Safety & Trust</p><h2>Designed with care, clarity and confidence.</h2><p>Senior Social focuses on a safe, respectful and easy-to-use experience. The platform is designed to be simple for seniors while also giving families confidence that their loved ones can participate in meaningful social activities.</p></div>
       </div>
     </section>
@@ -91,16 +91,16 @@
         <div>
           <p class="section-label">Member Records & Review</p>
           <h2>We keep records and review members before connecting them.</h2>
-          <p>To keep Senior Social safe, we treat every joining request as an interest registration first. Personal details and uploaded documents are reviewed before any member is connected with groups, activities or other people.</p>
-          <p class="aadhaar-note"><strong>Aadhaar safety note:</strong> Aadhaar card picture is mandatory for internal records and admin review only. It is not used for email or mobile verification, and Aadhaar number is not entered separately on this form.</p>
+          <p>To keep Senior Social safe, every joining request is first treated as an interest registration. Mobile number and documents are manually checked by admin before approval.</p>
+          <p class="aadhaar-note"><strong>Aadhaar safety note:</strong> Aadhaar card picture is required for internal records and admin review only. It is not used for email or mobile verification, and Aadhaar number is not entered separately on this form.</p>
         </div>
         <div class="verification-card">
           <h3>Records and verification</h3>
           <div class="verification-list">
-            <div><span>📱</span><strong>Mobile verification</strong><small>Confirm the member through their phone number.</small></div>
-            <div><span>✉️</span><strong>Email verification</strong><small>Confirm the member using the email they provide.</small></div>
-            <div><span>📷</span><strong>Profile photo</strong><small>Current passport-size photo is mandatory for admin review.</small></div>
-            <div><span>🪪</span><strong>Aadhaar card picture</strong><small>Mandatory for internal records and admin review only.</small></div>
+            <div><span>📱</span><strong>Mobile number</strong><small>Entered online and manually verified by admin before approval.</small></div>
+            <div><span>✉️</span><strong>Email verification</strong><small>Firebase sends an email verification link after registration.</small></div>
+            <div><span>📷</span><strong>Profile photo</strong><small>Current passport-size photo must be provided manually/offline to admin.</small></div>
+            <div><span>🪪</span><strong>Aadhaar card picture</strong><small>Provided manually/offline for internal records and admin review only.</small></div>
           </div>
         </div>
       </div>
@@ -124,23 +124,23 @@
           <p class="section-label">Join Senior Social</p>
           <h2>Create a verified interest registration.</h2>
           <p>Fill in the details below. Your registration will be saved securely for admin review. Personal details are not displayed publicly on the website.</p>
-          <div class="privacy-note"><strong>Safe first:</strong> Members should be email/phone/document verified and admin-approved before any senior group or individual connection is arranged.</div>
+          <div class="privacy-note"><strong>Free testing mode:</strong> No paid SMS OTP or Firebase Storage is used. Email verification is sent online; mobile and document verification is completed manually by admin before approval.</div>
         </div>
 
         <form id="joinForm" class="join-form">
           <div class="form-row"><label for="fullName">Full name *</label><input id="fullName" name="Full name" type="text" required placeholder="Enter full name" /></div>
           <div class="form-row two-cols"><div><label for="age">Age *</label><input id="age" name="Age" type="number" min="60" max="110" required placeholder="e.g. 68" /></div><div><label for="city">City *</label><input id="city" name="City" type="text" required placeholder="e.g. Delhi" /></div></div>
           <div class="form-row two-cols"><div><label for="phone">Mobile number *</label><input id="phone" name="Mobile number" type="tel" inputmode="numeric" pattern="[0-9]{10}" minlength="10" maxlength="10" required placeholder="10 digit mobile number" /></div><div><label for="email">Email *</label><input id="email" name="Email" type="email" required placeholder="Enter email address" /></div></div>
+          <p class="form-help">Mobile number must be exactly 10 digits. It will be verified manually by admin before approval.</p>
           <div class="form-row"><label for="password">Create password *</label><input id="password" name="Password" type="password" required minlength="6" placeholder="Minimum 6 characters" /></div>
-          <div class="form-row two-cols"><div><label for="passportPhoto">Current passport-size photo *</label><input id="passportPhoto" name="Passport size photo" type="file" accept="image/png,image/jpeg,image/webp" required /></div><div><label for="aadhaarPicture">Aadhaar card picture *</label><input id="aadhaarPicture" name="Aadhaar card picture" type="file" accept="image/png,image/jpeg,image/webp" required /></div></div>
-          <p class="form-help">Upload JPG, PNG or WEBP image files only. Maximum file size 5 MB each. Aadhaar card picture is collected for internal records only, not for email/mobile verification.</p>
           <div class="form-row"><label for="interests">Interests</label><textarea id="interests" name="Interests" rows="3" placeholder="Tea groups, walks, music, bhajan, yoga, books, travel, volunteering..."></textarea></div>
           <div class="form-row"><label for="lookingFor">What are you looking for?</label><select id="lookingFor" name="Looking for"><option value="Friendship and companionship">Friendship and companionship</option><option value="Group activities and events">Group activities and events</option><option value="Hobby or learning groups">Hobby or learning groups</option><option value="Wellness or walking groups">Wellness or walking groups</option><option value="Family enquiry for a senior">Family enquiry for a senior</option></select></div>
-          <div class="form-row"><label for="verificationMethod">Preferred verification method</label><select id="verificationMethod" name="Preferred verification method"><option value="Mobile verification">Mobile verification</option><option value="Email verification">Email verification</option><option value="Family or emergency contact confirmation">Family or emergency contact confirmation</option><option value="Document review by admin">Document review by admin</option><option value="Other government ID if preferred">Other government ID if preferred</option></select></div>
+          <label class="consent-line"><input id="documentUndertaking" name="Document undertaking" type="checkbox" required /> I understand that Senior Social requires a current passport-size photo and Aadhaar card picture for internal records and admin review before approval. I will provide these manually/offline to admin. These documents are not used for email or mobile verification.</label>
           <label class="consent-line"><input id="correctInfo" name="Correct information declaration" type="checkbox" required /> I confirm that the information provided is correct and belongs to me.</label>
+          <label class="consent-line"><input id="legalUndertaking" name="Legal undertaking" type="checkbox" required /> I confirm that I am a genuine user and that I will not use Senior Social for abuse, misconduct, harassment, fraud, illegal activity, unsafe behaviour, or misuse of the platform. I understand that any such conduct may lead to suspension/removal and appropriate action or proceedings under applicable Indian law.</label>
           <label class="consent-line"><input id="consent" name="Consent" type="checkbox" required /> I agree to be contacted by Senior Social regarding this enquiry and understand that my details will not be published publicly.</label>
           <button type="submit" class="btn form-submit">Register Interest</button>
-          <p id="formMessage" class="form-help">After submission, we will send an email verification link where possible and save the profile for admin review.</p>
+          <p id="formMessage" class="form-help">After submission, we will send an email verification link and save the profile for admin review.</p>
         </form>
       </div>
     </section>
@@ -155,6 +155,6 @@
 
   <footer class="footer"><div class="container footer-inner"><a href="#home" class="footer-logo" aria-label="Senior Social home"><span class="logo-mark"><img src="assets/senior-social-mark.svg" alt="" /></span><span class="logo-text"><strong>Senior Social</strong><small>Connect • Engage • Belong</small></span></a><p><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms & Safety</a></p></div></footer>
 
-  <script type="module" src="script.js?v=20260823-aadhaar-records-required"></script>
+  <script type="module" src="script.js?v=20260828-no-storage-manual-docs"></script>
 </body>
 </html>
