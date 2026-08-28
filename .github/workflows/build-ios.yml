@@ -1,0 +1,52 @@
+name: Build iOS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'mobile_app/**'
+      - '.github/workflows/build-ios.yml'
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: stable
+          cache: true
+
+      - name: Prepare iOS Flutter project
+        working-directory: mobile_app
+        run: |
+          flutter create . --platforms=ios --org in.seniorsocial --project-name senior_social
+          test -f ios/Runner/GoogleService-Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Senior Social" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleName Senior Social" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier in.seniorsocial.app" ios/Runner/Info.plist || true
+
+      - name: Install dependencies
+        working-directory: mobile_app
+        run: flutter pub get
+
+      - name: Analyze Flutter app
+        working-directory: mobile_app
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build iOS without code signing
+        working-directory: mobile_app
+        run: flutter build ios --debug --no-codesign
+
+      - name: Upload unsigned iOS build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: senior-social-ios-unsigned-build
+          path: mobile_app/build/ios/iphoneos/Runner.app
+          if-no-files-found: warn
