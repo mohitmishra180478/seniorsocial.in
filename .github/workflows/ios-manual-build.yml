@@ -1,0 +1,78 @@
+name: Build iOS Manual
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/ios-manual-build.yml'
+      - 'mobile_app/**'
+
+jobs:
+  build-ios-manual:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: stable
+          cache: true
+
+      - name: Prepare iOS Flutter project
+        working-directory: mobile_app
+        run: |
+          flutter create . --platforms=ios --org in.seniorsocial --project-name senior_social
+          test -f ios/Runner/GoogleService-Info.plist
+          rm -f test/widget_test.dart
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Senior Social" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleName Senior Social" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier in.seniorsocial.app" ios/Runner/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 13.0" ios/Runner/Info.plist || true
+          if [ -f ios/Podfile ]; then
+            sed -i '' "s/^# platform :ios.*/platform :ios, '13.0'/" ios/Podfile
+            sed -i '' "s/^platform :ios.*/platform :ios, '13.0'/" ios/Podfile
+            if ! grep -q "platform :ios" ios/Podfile; then
+              printf "platform :ios, '13.0'\n" | cat - ios/Podfile > ios/Podfile.tmp
+              mv ios/Podfile.tmp ios/Podfile
+            fi
+            if ! grep -q "IPHONEOS_DEPLOYMENT_TARGET" ios/Podfile; then
+              cat >> ios/Podfile <<'EOF'
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
+end
+EOF
+            fi
+          fi
+
+      - name: Install dependencies
+        working-directory: mobile_app
+        run: |
+          flutter pub get
+          cd ios
+          pod install --repo-update
+
+      - name: Analyze Flutter app
+        working-directory: mobile_app
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build iOS without code signing
+        working-directory: mobile_app
+        run: flutter build ios --debug --no-codesign
+
+      - name: Upload unsigned iOS build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: senior-social-ios-unsigned-build
+          path: mobile_app/build/ios/iphoneos/Runner.app
+          if-no-files-found: warn
