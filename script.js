@@ -11,13 +11,10 @@ import {
   setDoc,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
 import { firebaseConfig, isFirebaseConfigured } from './firebase-config.js';
+
+const legalUndertakingText = 'I confirm that I am a genuine user and that I will not use Senior Social for abuse, misconduct, harassment, fraud, illegal activity, unsafe behaviour, or misuse of the platform. I understand that any such conduct may lead to suspension/removal and appropriate action or proceedings under applicable Indian law.';
+const documentUndertakingText = 'I understand that Senior Social requires a current passport-size photo and Aadhaar card picture for internal records and admin review before approval. These documents will be provided manually/offline to admin and are not used for email or mobile verification.';
 
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
@@ -31,13 +28,11 @@ const installAppBtn = document.querySelector('#installAppBtn');
 let app = null;
 let auth = null;
 let db = null;
-let storage = null;
 
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
-  storage = getStorage(app);
 }
 
 if (year) {
@@ -85,51 +80,11 @@ function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '');
 }
 
-function getFile(formData, fieldName) {
-  const file = formData.get(fieldName);
-  return file instanceof File && file.size > 0 ? file : null;
-}
-
-function validateImageFile(file, label) {
-  if (!file) return;
-  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-  if (!allowed.includes(file.type)) {
-    throw new Error(`${label} must be a JPG, PNG or WEBP image.`);
-  }
-  const maxBytes = 5 * 1024 * 1024;
-  if (file.size > maxBytes) {
-    throw new Error(`${label} must be less than 5 MB.`);
-  }
-}
-
-function addLegalUndertakingCheckbox() {
-  if (!joinForm || document.querySelector('#legalUndertaking')) return;
-  const submitButton = joinForm.querySelector('button[type="submit"]');
-  if (!submitButton) return;
-
-  const undertaking = document.createElement('label');
-  undertaking.className = 'consent-line';
-  undertaking.innerHTML = '<input id="legalUndertaking" name="Legal undertaking" type="checkbox" required /> I confirm that I am a genuine user and I undertake to use Senior Social only for lawful, respectful and genuine social connection purposes. I understand that any abuse, misconduct, harassment, fraud, illegal activity, misuse of the platform or unsafe behaviour may lead to removal from Senior Social and appropriate proceedings/action under applicable Indian law.';
-  submitButton.parentNode.insertBefore(undertaking, submitButton);
-}
-
-async function uploadUserFile(userUid, file, type) {
-  if (!file || !storage) return null;
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const filePath = `users/${userUid}/${type}-${Date.now()}-${safeName}`;
-  const fileRef = ref(storage, filePath);
-  await uploadBytes(fileRef, file);
-  const url = await getDownloadURL(fileRef);
-  return { path: filePath, url, name: file.name, contentType: file.type, size: file.size };
-}
-
-addLegalUndertakingCheckbox();
-
 if (joinForm) {
   joinForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    if (!isFirebaseConfigured || !auth || !db || !storage) {
+    if (!isFirebaseConfigured || !auth || !db) {
       setMessage('Firebase is not configured yet. Please contact Senior Social directly at info@seniorsocial.in.', true);
       return;
     }
@@ -147,8 +102,7 @@ if (joinForm) {
       const ageRaw = String(formData.get('Age') || '').trim();
       const age = Number(ageRaw);
       const phone = onlyDigits(formData.get('Mobile number'));
-      const passportPhotoFile = getFile(formData, 'Passport size photo');
-      const aadhaarPhotoFile = getFile(formData, 'Aadhaar card picture');
+      const documentUndertakingAccepted = Boolean(formData.get('Document undertaking'));
       const legalUndertakingAccepted = Boolean(formData.get('Legal undertaking'));
 
       if (!email || !password || !fullName || !ageRaw || !phone) {
@@ -163,30 +117,19 @@ if (joinForm) {
         throw new Error('Mobile number must be exactly 10 digits. Please enter a valid 10 digit mobile number.');
       }
 
-      if (!passportPhotoFile) {
-        throw new Error('Current passport size photo is mandatory.');
-      }
-
-      if (!aadhaarPhotoFile) {
-        throw new Error('Aadhaar card picture is mandatory for internal records. It is not used for email or mobile verification.');
+      if (!documentUndertakingAccepted) {
+        throw new Error('Please accept the document undertaking before registration.');
       }
 
       if (!legalUndertakingAccepted) {
-        throw new Error('Please accept the mandatory user undertaking before registering.');
+        throw new Error('Please accept the legal undertaking before registration.');
       }
-
-      validateImageFile(passportPhotoFile, 'Passport size photo');
-      validateImageFile(aadhaarPhotoFile, 'Aadhaar card picture');
 
       const credential = await createUserWithEmailAndPassword(auth, email, password);
       const user = credential.user;
 
       await updateProfile(user, { displayName: fullName });
       await sendEmailVerification(user);
-
-      setMessage('Uploading documents securely...');
-      const passportPhoto = await uploadUserFile(user.uid, passportPhotoFile, 'passport-photo');
-      const aadhaarCardPicture = await uploadUserFile(user.uid, aadhaarPhotoFile, 'aadhaar-card');
 
       const profile = {
         uid: user.uid,
@@ -197,18 +140,22 @@ if (joinForm) {
         email,
         interests: String(formData.get('Interests') || '').trim(),
         lookingFor: String(formData.get('Looking for') || '').trim(),
-        preferredVerificationMethod: String(formData.get('Preferred verification method') || '').trim(),
-        passportPhoto,
-        aadhaarCardPicture,
+        preferredVerificationMethod: 'Email verification plus manual admin mobile/document review',
         correctInformationDeclaration: Boolean(formData.get('Correct information declaration')),
         consent: Boolean(formData.get('Consent')),
-        legalUndertakingAccepted,
-        legalUndertakingText: 'I confirm that I am a genuine user and I undertake to use Senior Social only for lawful, respectful and genuine social connection purposes. I understand that any abuse, misconduct, harassment, fraud, illegal activity, misuse of the platform or unsafe behaviour may lead to removal from Senior Social and appropriate proceedings/action under applicable Indian law.',
         emailVerified: user.emailVerified,
         phoneVerified: false,
+        phoneVerificationMethod: 'Manual admin verification',
         familyContactVerified: false,
-        identityDocumentUploaded: true,
-        passportPhotoUploaded: Boolean(passportPhoto),
+        identityDocumentUploaded: false,
+        passportPhotoUploaded: false,
+        documentsToBeProvidedOffline: true,
+        documentUndertakingAccepted: true,
+        documentUndertakingText,
+        aadhaarRecordPurposeOnly: true,
+        aadhaarNotUsedForEmailOrMobileVerification: true,
+        legalUndertakingAccepted: true,
+        legalUndertakingText,
         adminApproved: false,
         profileStatus: 'Pending Review',
         createdAt: serverTimestamp(),
@@ -218,7 +165,7 @@ if (joinForm) {
       await setDoc(doc(db, 'users', user.uid), profile);
 
       joinForm.reset();
-      setMessage('Registration saved successfully. Please check your email and click the verification link. Senior Social will review the profile before connecting members.');
+      setMessage('Registration saved successfully. Please check your email verification link. Admin will manually verify mobile number and documents before approval.');
     } catch (error) {
       let friendlyMessage = error.message || 'Unable to save registration. Please try again.';
       if (error.code === 'auth/email-already-in-use') {
@@ -229,9 +176,6 @@ if (joinForm) {
       }
       if (error.code === 'auth/invalid-email') {
         friendlyMessage = 'Please enter a valid email address.';
-      }
-      if (error.code === 'storage/unauthorized') {
-        friendlyMessage = 'Document upload is not allowed yet. Please enable Firebase Storage and update Storage rules.';
       }
       setMessage(friendlyMessage, true);
     } finally {
