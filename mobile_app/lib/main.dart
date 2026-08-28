@@ -86,7 +86,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 14),
               const _InfoCard(
                 title: 'Safe first',
-                body: 'Members are registered, email/mobile checked, documents recorded, and admin reviewed before being connected.',
+                body: 'Members are registered, email checked, mobile manually reviewed, documents recorded, and admin approved before being connected.',
                 icon: Icons.verified_user_rounded,
               ),
               const SizedBox(height: 28),
@@ -128,21 +128,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _age = TextEditingController();
   final _city = TextEditingController();
   final _phone = TextEditingController();
-  final _otp = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _interests = TextEditingController();
   final _picker = ImagePicker();
 
   bool _busy = false;
-  bool _sendingOtp = false;
-  bool _otpSent = false;
-  bool _phoneVerified = false;
   bool _legalAccepted = false;
   bool _showPassword = false;
   String _message = '';
-  String? _verificationId;
-  PhoneAuthCredential? _phoneCredential;
   XFile? _passportPhoto;
   XFile? _aadhaarPicture;
 
@@ -152,7 +146,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _age.dispose();
     _city.dispose();
     _phone.dispose();
-    _otp.dispose();
     _email.dispose();
     _password.dispose();
     _interests.dispose();
@@ -175,64 +168,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         _passportPhoto = picked;
       }
-    });
-  }
-
-  Future<void> _sendMobileOtp() async {
-    final phone = _digits(_phone.text.trim());
-    if (phone.length != 10) {
-      setState(() => _message = 'Mobile number must be exactly 10 digits before sending OTP.');
-      return;
-    }
-
-    setState(() {
-      _sendingOtp = true;
-      _message = 'Sending OTP to +91 $phone...';
-    });
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+91$phone',
-      verificationCompleted: (credential) {
-        setState(() {
-          _phoneCredential = credential;
-          _phoneVerified = true;
-          _message = 'Mobile number verified automatically.';
-        });
-      },
-      verificationFailed: (error) {
-        setState(() {
-          _message = error.message ?? 'Unable to send mobile OTP.';
-          _sendingOtp = false;
-        });
-      },
-      codeSent: (verificationId, resendToken) {
-        setState(() {
-          _verificationId = verificationId;
-          _otpSent = true;
-          _sendingOtp = false;
-          _message = 'OTP sent. Please enter the code received on mobile.';
-        });
-      },
-      codeAutoRetrievalTimeout: (verificationId) {
-        _verificationId = verificationId;
-        if (mounted) setState(() => _sendingOtp = false);
-      },
-      timeout: const Duration(seconds: 60),
-    );
-  }
-
-  void _verifyEnteredOtp() {
-    if (_verificationId == null || _otp.text.trim().length < 4) {
-      setState(() => _message = 'Please enter the OTP received on mobile.');
-      return;
-    }
-    _phoneCredential = PhoneAuthProvider.credential(
-      verificationId: _verificationId!,
-      smsCode: _otp.text.trim(),
-    );
-    setState(() {
-      _phoneVerified = true;
-      _message = 'Mobile OTP captured. Final verification will complete during registration.';
     });
   }
 
@@ -266,10 +201,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _message = 'Mobile number must be exactly 10 digits.');
       return;
     }
-    if (!_phoneVerified || _phoneCredential == null) {
-      setState(() => _message = 'Please verify mobile number with OTP before registering.');
-      return;
-    }
     if (_passportPhoto == null) {
       setState(() => _message = 'Current passport-size photo is mandatory.');
       return;
@@ -300,14 +231,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await user.updateDisplayName(_name.text.trim());
       await user.sendEmailVerification();
 
-      try {
-        await user.linkWithCredential(_phoneCredential!);
-      } on FirebaseAuthException catch (e) {
-        if (e.code != 'provider-already-linked' && e.code != 'credential-already-in-use') {
-          rethrow;
-        }
-      }
-
       setState(() => _message = 'Uploading passport photo and Aadhaar card picture...');
       final passportPhoto = await _uploadUserFile(userUid: user.uid, file: _passportPhoto!, type: 'passport-photo');
       final aadhaarCardPicture = await _uploadUserFile(userUid: user.uid, file: _aadhaarPicture!, type: 'aadhaar-card');
@@ -318,12 +241,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'age': age,
         'city': _city.text.trim(),
         'phone': phone,
+        'phoneDisplay': '+91 $phone',
         'email': _email.text.trim().toLowerCase(),
         'interests': _interests.text.trim(),
         'lookingFor': 'Friendship and companionship',
-        'preferredVerificationMethod': 'Email / mobile verification plus document review',
+        'preferredVerificationMethod': 'Email verification link plus manual admin mobile/document review',
         'emailVerified': user.emailVerified,
-        'phoneVerified': true,
+        'phoneVerified': false,
+        'phoneVerificationMethod': 'Manual admin verification',
         'familyContactVerified': false,
         'identityDocumentUploaded': true,
         'passportPhotoUploaded': true,
@@ -340,11 +265,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
 
       if (!mounted) return;
-      setState(() => _message = 'Registration saved. Please check your email verification link. Profile is pending admin review.');
+      setState(() => _message = 'Registration saved. Please check your email verification link. Mobile number will be verified manually by admin. Profile is pending admin review.');
     } on FirebaseAuthException catch (e) {
-      setState(() => _message = e.message ?? 'Unable to register.');
+      String msg = e.message ?? 'Unable to register.';
+      if (e.code == 'email-already-in-use') msg = 'This email is already registered. Please use a different email.';
+      if (e.code == 'weak-password') msg = 'Please use a password with at least 6 characters.';
+      if (e.code == 'invalid-email') msg = 'Please enter a valid email address.';
+      setState(() => _message = msg);
     } catch (_) {
-      setState(() => _message = 'Unable to register. Please check Firebase Storage/Phone Auth setup and try again.');
+      setState(() => _message = 'Unable to register. Please check Firebase Storage setup and try again.');
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -365,24 +294,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _field(_age, 'Age', required: true, keyboardType: TextInputType.number),
                 _field(_city, 'City', required: true),
                 _field(_phone, 'Mobile number', required: true, keyboardType: TextInputType.phone),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _sendingOtp || _busy ? null : _sendMobileOtp,
-                        child: Text(_sendingOtp ? 'Sending OTP...' : 'Send Mobile OTP'),
-                      ),
-                    ),
-                  ],
-                ),
-                if (_otpSent && !_phoneVerified) ...[
-                  const SizedBox(height: 12),
-                  _field(_otp, 'Mobile OTP', required: true, keyboardType: TextInputType.number),
-                  SizedBox(width: double.infinity, child: OutlinedButton(onPressed: _verifyEnteredOtp, child: const Text('Verify OTP'))),
-                ],
-                if (_phoneVerified) const Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 12),
-                  child: Text('Mobile verified', style: TextStyle(color: Color(0xFF15803D), fontWeight: FontWeight.bold)),
+                  child: Text('Mobile number must be exactly 10 digits. It will be verified manually by admin; no paid SMS OTP is required.', style: TextStyle(fontSize: 12)),
                 ),
                 _field(_email, 'Email', required: true, keyboardType: TextInputType.emailAddress),
                 _field(_password, 'Create password', required: true, obscureText: !_showPassword),
@@ -490,7 +404,7 @@ class PendingApprovalScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text('Welcome ${user?.displayName ?? ''}', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
             const SizedBox(height: 12),
-            const Text('Your profile is pending admin review. Senior Social will verify and approve profiles before connecting members with groups or activities.', style: TextStyle(fontSize: 16, height: 1.45)),
+            const Text('Your profile is pending admin review. Senior Social will verify email, manually review mobile/documents, and approve profiles before connecting members with groups or activities.', style: TextStyle(fontSize: 16, height: 1.45)),
             const SizedBox(height: 22),
             FilledButton(onPressed: () => _openUrl('mailto:info@seniorsocial.in'), child: const Text('Contact Support')),
           ],
@@ -547,17 +461,17 @@ Widget _field(TextEditingController controller, String label, {bool required = f
       keyboardType: keyboardType,
       decoration: InputDecoration(labelText: required ? '$label *' : label, border: const OutlineInputBorder()),
       validator: (value) {
-        final clean = (value ?? '').trim();
-        if (required && clean.isEmpty) return 'Required';
+        final trimmed = value?.trim() ?? '';
+        if (required && trimmed.isEmpty) return 'Required';
         if (label == 'Age') {
-          final age = int.tryParse(clean);
+          final age = int.tryParse(trimmed);
           if (age == null || age < 60) return 'Age must be 60 years or above';
         }
         if (label == 'Mobile number') {
-          final digits = clean.replaceAll(RegExp(r'\D'), '');
+          final digits = trimmed.replaceAll(RegExp(r'\D'), '');
           if (digits.length != 10) return 'Mobile number must be exactly 10 digits';
         }
-        if ((label == 'Create password' || label == 'Password') && clean.length < 6) return 'Minimum 6 characters';
+        if (label == 'Create password' && trimmed.length < 6) return 'Minimum 6 characters';
         return null;
       },
     ),
@@ -569,13 +483,14 @@ Widget _uploadTile({required String title, required XFile? file, required VoidCa
     padding: const EdgeInsets.only(bottom: 14),
     child: InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
       child: InputDecorator(
         decoration: InputDecoration(labelText: title, border: const OutlineInputBorder()),
         child: Row(
           children: [
             const Icon(Icons.upload_file_rounded),
-            const SizedBox(width: 10),
-            Expanded(child: Text(file == null ? 'Tap to choose image' : file.name)),
+            const SizedBox(width: 12),
+            Expanded(child: Text(file?.name ?? 'Tap to choose image', overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),
